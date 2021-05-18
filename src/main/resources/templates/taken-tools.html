@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>GeoLink3D Tools Registry</title>
+<link rel="stylesheet" th:href="@{/registry-css/registry.css}">
+</head>
+<body>
+
+<br>
+<a id="signout" th:href="@{/GeoLink3D/tools-registry/login}">Kijelentkezés</a>
+<br><br>
+<div id="auth">
+ <span>Bejelentkezve mint: </span><b>user@felhasználónév</b></div>
+ 
+<a th:href="@{/GeoLink3D/tools-registry/user-account}">Eszköz elvitel</a>&nbsp;&nbsp;&nbsp;
+<a>Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
+<a>Jelszó módosítás</a>&nbsp;&nbsp;&nbsp;
+<input id="search-field" type="text" th:placeholder="Keresés">
+<h1>Felvett eszközök</h1>
+
+<table id="client">
+	<tr>
+	<th>Sorszám</th>
+	<th>Eszköz neve</th>
+	<th>Gyári száma</th>
+	<th>Elvitel helye</th>
+	<th>Elvitel Ideje</th>
+	<th>Lead</th>
+	</tr>
+<tr>
+<tr th:each="tool : ${tools}">
+	<td th:utext="${toolStat.count}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:utext="${tool.name}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:utext=${tool.serialNumber} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	
+	<td th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	
+	<td th:if="${tool.isUsed}" th:utext=${tool.toolUser} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:unless="${tool.isUsed}" th:classappend="${toolStat.odd} ? '' : 'colored'">-</td>
+	<td th:if="${tool.isUsed}"  th:classappend="${toolStat.odd} ? '' : 'colored'"><button disabled="disabled">Felveszem</button></td>
+	<td th:unless="${tool.isUsed}"  th:onclick="'sendId(\'' + ${toolStat.count} + '\');'" th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Felveszem</button></td>
+	</tr>
+
+</table>
+
+</body>
+</html>

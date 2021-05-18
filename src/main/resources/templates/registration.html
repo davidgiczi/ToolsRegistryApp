@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>GeoLink3D Tools Registry</title>
+<link rel="stylesheet" th:href="@{/registry-css/registry.css}">
+</head>
+<body>
+
+<h1>Regisztráció</h1>
+<hr>
+<br>
+<br>
+<br>
+
+<div id="registForm">
+<br>
+
+<br>
+<form th:action="@{/GeoLink3D/tools-registry/login}"  id="regForm">
+<h4>Keresztnév</h4>
+<input type="text" id="fname" name="firstname" size="50" autofocus="autofocus"/><br>
+<h4>Vezetéknév</h4>
+<input type="text" id="lname" name="lastname" size="50"/><br>
+<h4>Születési idő</h4>
+<input type="date" id="bdate" name="birthdate"/><br>
+<h4>Felhasználónév</h4>
+<input type="email" id="uname" name="username" size="50" th:placeholder="e-mail"/>
+<h4>Jelszó</h4>
+<input type="password" id="pass" name="pass" size="50"/><br>
+<h4>Jelszó újra</h4>
+<input type="password" id="passagain" name="pass" size="50"/><br>
+<br><br><br>
+<input type="submit" id=regist-submit-btn th:value="Küldés"/>
+</form>
+
+<br>
+
+</div>
+
+</body>
+</html>

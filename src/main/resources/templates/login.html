@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>GeoLink3D Tools Registry</title>
+<link rel="stylesheet" th:href="@{/registry-css/registry.css}">
+</head>
+<body>
+
+<h1>Belépés</h1>
+<hr>
+<br>
+<br>
+<br>
+<div id="login">
+<form th:action="@{/GeoLink3D/tools-registry/user-account}">
+<br>
+<br>
+<input type="text" id="username" name="username" th:placeholder="e-mail"  size="30"/><br><br>
+<input type="password" id="password" name="password" th:placeholder="jelszó" size="30"/><br><br>
+<input type="submit" th:value="Belépés"><br><br>
+<a th:href="@{/GeoLink3D/tools-registry/registration}" th:text="Regisztráció"></a>
+</form>
+</div>
+
+
+</body>
+</html>
