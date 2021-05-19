@@ -16,7 +16,7 @@
 <div id="auth">
  <span>Bejelentkezve mint: </span><b>user@felhasználónév</b></div>
  
-<a th:href="@{/GeoLink3D/tools-registry/user-account}">Eszköz elvitel</a>&nbsp;&nbsp;&nbsp;
+<a th:href="@{/GeoLink3D/tools-registry/tools}">Eszközök lista</a>&nbsp;&nbsp;&nbsp;
 <a>Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
 <a>Jelszó módosítás</a>&nbsp;&nbsp;&nbsp;
 <input id="search-field" type="text" th:placeholder="Keresés">
@@ -32,17 +32,13 @@
 	<th>Lead</th>
 	</tr>
 <tr>
-<tr th:each="tool : ${tools}">
+<tr th:each="tool : ${takens}">
 	<td th:utext="${toolStat.count}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	<td th:utext="${tool.name}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	<td th:utext=${tool.serialNumber} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
-	
-	<td th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
-	
-	<td th:if="${tool.isUsed}" th:utext=${tool.toolUser} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
-	<td th:unless="${tool.isUsed}" th:classappend="${toolStat.odd} ? '' : 'colored'">-</td>
-	<td th:if="${tool.isUsed}"  th:classappend="${toolStat.odd} ? '' : 'colored'"><button disabled="disabled">Felveszem</button></td>
-	<td th:unless="${tool.isUsed}"  th:onclick="'sendId(\'' + ${toolStat.count} + '\');'" th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Felveszem</button></td>
+	<td th:utext=${tool.pickUpPlace} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:utext="${#dates.format(tool.pickUpDate, 'yyyy-MM-dd HH.mm:ss ')}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Leadom</button></td>
 	</tr>
 
 </table>

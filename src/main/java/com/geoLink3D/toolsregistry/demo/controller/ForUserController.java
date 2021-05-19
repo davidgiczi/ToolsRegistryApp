@@ -1,7 +1,9 @@
 package com.geoLink3D.toolsregistry.demo.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.geoLink3D.toolsregistry.demo.model.Tool;
 import com.geoLink3D.toolsregistry.demo.service.ToolService;
 
@@ -25,6 +26,7 @@ public class ForUserController {
 	@GetMapping("/login")
 	public String goLoginPage(HttpServletRequest request) {
 		request.getSession().invalidate();
+		toolService.destroyToolList();
 		return "login";
 	}
 	
@@ -33,25 +35,32 @@ public class ForUserController {
 		return "registration";
 	}
 	
-	@GetMapping("/user-account")
+	@GetMapping("/tools")
 	public String goUserAccount(Model model, HttpServletRequest request) {
 		
 		model.addAttribute("places", Arrays.asList("Dunakeszi", "Debrecen", "Kecskemét"));
 		model.addAttribute("tools", toolService.getTools());
 		
-		return "user-account";
+		return "tools-list";
 	}
 	
 	@GetMapping("/takeTool")
-	public String takeTool(@RequestParam("id") int id, Model model) {
+	public String takeTool(@RequestParam("id") int id, HttpServletRequest request, Model model) {
 		
+		@SuppressWarnings(value = "unchecked")
+		List<Tool> takens = (List<Tool>) request.getSession().getAttribute("tools");
+		if(takens == null) {
+			takens = new ArrayList<>();
+		}
 		Tool tool = toolService.getTools().get(id - 1);
 		tool.setIsUsed(true);
 		tool.setPickUpDate(new Date(System.currentTimeMillis()));
 		tool.setPickUpPlace("Dunakeszi");
 		tool.setToolUser("Dolgozó2");
-		model.addAttribute("tool");
-		
+		takens.add(tool);
+		toolService.save(tool, id - 1);
+		request.getSession().setAttribute("tools", takens);
+		model.addAttribute("takens", takens);
 		return "taken-tools";
 	}
 	

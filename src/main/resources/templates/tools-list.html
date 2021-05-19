@@ -13,13 +13,13 @@
 <a id="signout" th:href="@{/GeoLink3D/tools-registry/login}">Kijelentkezés</a>
 <br><br>
 <div id="auth">
- <span>Bejelentkezve mint: </span><b>user@felhasználónév</b></div>
+ <span>Bejelentkezve mint: </span><b>Dolgozó2</b></div>
 
-<a>Eszköz elvitel</a>&nbsp;&nbsp;&nbsp;
+<a>Eszközök lista</a>&nbsp;&nbsp;&nbsp;
 <a>Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
 <a>Jelszó módosítás</a>&nbsp;&nbsp;&nbsp;
 <input id="search-field" type="text" th:placeholder="Keresés">
-<h1>Eszköz elvitel</h1>
+<h1>Eszközök lista</h1>
 
 
 <table th:if="${not #lists.isEmpty(tools)}" id="client">
@@ -38,8 +38,12 @@
 	<td th:utext=${tool.serialNumber} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	
 	<td th:classappend="${toolStat.odd} ? '' : 'colored'">
-	<select class="place_field" th:value="${place}" id="place">
-	<option th:each="place : ${places}" th:text="${place}"></option>
+	<select th:if="${tool.isUsed == true}" class="place_field" th:value="${place}" disabled="disabled">
+	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected"></option>
+	</select>
+	<select th:unless="${tool.isUsed == true}" class="place_field" th:value="${place}">
+	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected"></option>
+	<option th:unless="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}"></option>
 	</select>
 	</td>
 	
