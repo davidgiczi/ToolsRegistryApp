@@ -2,7 +2,7 @@ package com.geoLink3D.toolsregistry.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.geoLink3D.toolsregistry.demo.model.Tool;
 
@@ -20,8 +20,6 @@ public class ToolService {
 		totalStation.setPickUpPlace("Kecskemét");
 		tools.add(totalStation);
 		Tool scanner = new Tool("Laser Scanner","93654887892");
-		scanner.setIsUsed(true);
-		scanner.setToolUser("Dolgozó1");
 		scanner.setPickUpPlace("Dunakeszi");
 		tools.add(scanner);
 		Tool drone = new Tool("Drone", "163DF840012345");
@@ -38,6 +36,18 @@ public class ToolService {
 	}
 	
 	public void destroyToolList() {
-		tools.clear();
+		if(tools != null) {
+			tools.clear();	
+		}
+		
+	}
+	
+	public Optional<Tool> getToolBySerialNumber(String serial) {
+		
+		return tools.stream().filter(t -> t.getSerialNumber().equals(serial)).findFirst();
+	}
+	
+	public int getId(Tool tool) {
+		return tools.indexOf(tool);
 	}
 }

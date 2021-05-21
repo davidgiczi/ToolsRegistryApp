@@ -14,34 +14,44 @@
 <a id="signout" th:href="@{/GeoLink3D/tools-registry/login}">Kijelentkezés</a>
 <br><br>
 <div id="auth">
- <span>Bejelentkezve mint: </span><b>user@felhasználónév</b></div>
+ <span>Bejelentkezve mint: </span><b>Dolgozó2</b></div>
  
 <a th:href="@{/GeoLink3D/tools-registry/tools}">Eszközök lista</a>&nbsp;&nbsp;&nbsp;
-<a>Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
 <a>Jelszó módosítás</a>&nbsp;&nbsp;&nbsp;
 <input id="search-field" type="text" th:placeholder="Keresés">
 <h1>Felvett eszközök</h1>
 
-<table id="client">
+<table id="client" th:if="${not #lists.isEmpty(takens)}">
 	<tr>
 	<th>Sorszám</th>
 	<th>Eszköz neve</th>
 	<th>Gyári száma</th>
 	<th>Elvitel helye</th>
 	<th>Elvitel Ideje</th>
+	<th>Leadás helye</th>
 	<th>Lead</th>
 	</tr>
 <tr>
+
 <tr th:each="tool : ${takens}">
 	<td th:utext="${toolStat.count}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	<td th:utext="${tool.name}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
-	<td th:utext=${tool.serialNumber} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:utext=${tool.serialNumber} th:classappend="${toolStat.odd} ? '' : 'colored'" th:id="${toolStat.count} + serial"></td>
 	<td th:utext=${tool.pickUpPlace} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	<td th:utext="${#dates.format(tool.pickUpDate, 'yyyy-MM-dd HH.mm:ss ')}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
-	<td th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Leadom</button></td>
+	
+	<td th:classappend="${toolStat.odd} ? '' : 'colored'">
+	<select class="place_field" th:value="${place}" th:id="${toolStat.count} + select">
+	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected"></option>
+	<option th:unless="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}"></option>
+	</select>
+	</td>
+	
+	<td th:classappend="${toolStat.odd} ? '' : 'colored'" th:onclick="'sendSerialNoAndPlace(\'' + ${toolStat.count} + '\');'"><button>Leadom</button></td>
 	</tr>
 
 </table>
-
+<div id="empty" th:if="${#lists.isEmpty(takens)}">Nincs megjeleníthető tétel</div>
 </body>
+<script type="text/javascript" th:src="@{/registry-js/registry.js}"></script>
 </html>

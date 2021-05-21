@@ -15,8 +15,7 @@
 <div id="auth">
  <span>Bejelentkezve mint: </span><b>Dolgozó2</b></div>
 
-<a>Eszközök lista</a>&nbsp;&nbsp;&nbsp;
-<a>Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
+<a th:href="@{/GeoLink3D/tools-registry/takeAwayTool?id=-1&place=empty}">Felvett eszközök</a>&nbsp;&nbsp;&nbsp;
 <a>Jelszó módosítás</a>&nbsp;&nbsp;&nbsp;
 <input id="search-field" type="text" th:placeholder="Keresés">
 <h1>Eszközök lista</h1>
@@ -28,6 +27,7 @@
 	<th>Eszköz neve</th>
 	<th>Gyári száma</th>
 	<th>Elvitel helye</th>
+	<th>Elvitel ideje</th>
 	<th>Használó</th>
 	<th>Felvesz</th>
 	</tr>
@@ -41,16 +41,17 @@
 	<select th:if="${tool.isUsed == true}" class="place_field" th:value="${place}" disabled="disabled">
 	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected"></option>
 	</select>
-	<select th:unless="${tool.isUsed == true}" class="place_field" th:value="${place}">
-	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected"></option>
+	<select th:unless="${tool.isUsed == true}" class="place_field" th:value="${place}" th:id="${toolStat.count} + select">
+	<option th:if="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}" selected="selected" th:id="${toolStat.count}"></option>
 	<option th:unless="${tool.pickUpPlace == place}" th:each="place : ${places}" th:text="${place}"></option>
 	</select>
 	</td>
-	
+	<td th:if="${tool.isUsed}" th:utext="${#dates.format(tool.pickUpDate, 'yyyy-MM-dd HH.mm:ss ')}" th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
+	<td th:unless="${tool.isUsed}" th:classappend="${toolStat.odd} ? '' : 'colored'">-</td>
 	<td th:if="${tool.isUsed}" th:utext=${tool.toolUser} th:classappend="${toolStat.odd} ? '' : 'colored'"></td>
 	<td th:unless="${tool.isUsed}" th:classappend="${toolStat.odd} ? '' : 'colored'">-</td>
 	<td th:if="${tool.isUsed}"  th:classappend="${toolStat.odd} ? '' : 'colored'"><button disabled="disabled">Felveszem</button></td>
-	<td th:unless="${tool.isUsed}"  th:onclick="'sendId(\'' + ${toolStat.count} + '\');'" th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Felveszem</button></td>
+	<td th:unless="${tool.isUsed}"  th:onclick="'sendIdAndPlace(\'' + ${toolStat.count} + '\');'" th:classappend="${toolStat.odd} ? '' : 'colored'"><button>Felveszem</button></td>
 	</tr>
 
 </table>

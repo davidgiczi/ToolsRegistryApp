@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,24 +45,55 @@ public class ForUserController {
 		return "tools-list";
 	}
 	
-	@GetMapping("/takeTool")
-	public String takeTool(@RequestParam("id") int id, HttpServletRequest request, Model model) {
+	@GetMapping("/takeAwayTool")
+	public String takeAwayTool(@RequestParam("id") int id, @RequestParam("place") String place, HttpServletRequest request, Model model) {
+		
 		
 		@SuppressWarnings(value = "unchecked")
 		List<Tool> takens = (List<Tool>) request.getSession().getAttribute("tools");
 		if(takens == null) {
 			takens = new ArrayList<>();
 		}
-		Tool tool = toolService.getTools().get(id - 1);
+		if(id == -1) {
+			model.addAttribute("takens", takens);
+			model.addAttribute("places", Arrays.asList("Dunakeszi", "Debrecen", "Kecskemét"));
+			return "taken-tools";
+		}
+		
+		id-=1;
+		Tool tool = toolService.getTools().get(id);
 		tool.setIsUsed(true);
 		tool.setPickUpDate(new Date(System.currentTimeMillis()));
-		tool.setPickUpPlace("Dunakeszi");
+		tool.setPickUpPlace(place);
 		tool.setToolUser("Dolgozó2");
 		takens.add(tool);
-		toolService.save(tool, id - 1);
+		toolService.save(tool, id);
 		request.getSession().setAttribute("tools", takens);
 		model.addAttribute("takens", takens);
+		model.addAttribute("places", Arrays.asList("Dunakeszi", "Debrecen", "Kecskemét"));
+		
 		return "taken-tools";
+	}
+	
+	@GetMapping("/bringBackTool")
+	public String bringBackTool(@RequestParam("serial") String serialNumber, @RequestParam("place") String place, HttpServletRequest request, Model model) {
+	
+		Optional<Tool> bringBackTool = toolService.getToolBySerialNumber(serialNumber);
+		
+		if(bringBackTool.isPresent()) {
+			int id = toolService.getId(bringBackTool.get());
+			@SuppressWarnings(value = "unchecked")
+			List<Tool> takens = (List<Tool>) request.getSession().getAttribute("tools");
+			takens.remove(bringBackTool.get());
+			request.getSession().setAttribute("tools", takens);
+			bringBackTool.get().setIsUsed(false);
+			bringBackTool.get().setPutDownPlace(place);
+			bringBackTool.get().setPickUpPlace(place);
+			bringBackTool.get().setPutDownDate(new Date(System.currentTimeMillis()));
+			toolService.save(bringBackTool.get(), id);
+		}
+		
+		return "redirect:/GeoLink3D/tools-registry/tools";
 	}
 	
 }
